@@ -2,6 +2,11 @@
 # Kurulum: `pre-commit install`
 # Manuel çalıştırma: `pre-commit run --all-files`
 
+# pip install pre-commit
+# pre-commit install
+# pre-commit run --all-files
+
+
 repos:
 
 
