@@ -1,5 +1,7 @@
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.response.ApiResponse;
+import com.otcp.accounting.product.dto.CreateCategoryDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -22,8 +24,9 @@ public class CategoryController {
 
 
     @PostMapping
-    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
-        return new ResponseEntity<>(categoryService.saveCategory(category), HttpStatus.CREATED);
+    public ApiResponse<Category> createCategory(@RequestBody CreateCategoryDTO categoryDTO) {
+        Category category = categoryService.saveCategory(categoryDTO);
+        return ApiResponse.success(category);
     }
 
     @GetMapping("/{id}")
@@ -42,10 +45,11 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ApiResponse<Void> deleteCategory(@PathVariable Long id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.empty();
     }
+
 
     @GetMapping("/search")
     public ResponseEntity<List<Category>> searchCategoriesByName(@RequestParam String name) {
