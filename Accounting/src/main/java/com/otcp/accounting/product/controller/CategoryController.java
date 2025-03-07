@@ -1,9 +1,12 @@
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.config.LocalizationConfig;
 import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.CreateCategoryDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.service.CategoryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,21 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/categories")
+@RequiredArgsConstructor
 public class CategoryController {
     private final CategoryService categoryService;
+    private final MessageSource messageSource;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
+
 
 
     @PostMapping
-    public ApiResponse<Category> createCategory(@RequestBody CreateCategoryDTO categoryDTO) {
+    public ApiResponse<Category> createCategory(@RequestBody CreateCategoryDTO categoryDTO, Locale locale) {
         Category category = categoryService.saveCategory(categoryDTO);
-        return ApiResponse.success(category);
+        String successMessage = messageSource.getMessage("CATEGORY_CREATE_SUCCESS_MESSAGE", null, locale);
+        return ApiResponse.success(category, successMessage);
     }
 
     @GetMapping("/{id}")
@@ -45,9 +50,10 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ApiResponse<Void> deleteCategory(@PathVariable Long id) {
+    public ApiResponse<Void> deleteCategory(@PathVariable Long id, Locale locale) {
         categoryService.deleteCategory(id);
-        return ApiResponse.empty();
+        String message = messageSource.getMessage("CATEGORY_DELETE_SUCCESS_MESSAGE", null, locale);
+        return ApiResponse.success(null, message);
     }
 
 
