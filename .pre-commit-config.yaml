@@ -27,3 +27,10 @@ repos:
         entry: "bash -c \"if [ -f pom.xml ]; then mvn test; else echo 'No pom.xml, skipping tests'; fi\""
         language: system
         types: [java]
+        
+      - id: prevent-system-out
+        name: System.out.println Kullanımını Engelle
+        entry: "bash -c \"grep -rnw '.' -e 'System.out.println' && echo '❌ System.out.println kullanılmamalıdır!' && exit 1 || exit 0\""
+        language: system
+        pass_filenames: false
+        types: [java]
