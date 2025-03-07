@@ -1,0 +1,29 @@
+# Java projeleri için pre-commit yapılandırması (EKSTRA İNDİRME YOK)
+# Kurulum: `pre-commit install`
+# Manuel çalıştırma: `pre-commit run --all-files`
+
+repos:
+
+
+  # === JAVA KONTROLLERİ ===
+  - repo: local
+    hooks:
+      - id: check-java-files
+        name: Java Dosya Kontrolü
+        entry: "bash -c \"find . -name '*.java' -print\""
+        language: system
+        pass_filenames: false
+        types: [java]
+
+      - id: check-maven-pom
+        name: Maven POM XML doğrulama
+        entry: "bash -c \"if [ -f pom.xml ]; then xmllint --noout pom.xml; else echo 'No pom.xml found'; fi\""
+        language: system
+        types: [xml]
+        files: 'pom.xml'
+
+      - id: run-java-tests
+        name: JUnit Testleri Çalıştır
+        entry: "bash -c \"if [ -f pom.xml ]; then mvn test; else echo 'No pom.xml, skipping tests'; fi\""
+        language: system
+        types: [java]
