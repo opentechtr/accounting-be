@@ -4,12 +4,14 @@ import com.otcp.accounting.common.base.BaseEntity;
 import com.otcp.accounting.currentAccount.entity.CurrentAccount;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Data
 @Entity
 public class Invoice extends BaseEntity {
     @NotBlank(message = "Invoice number is required")
