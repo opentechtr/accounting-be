@@ -1,6 +1,7 @@
 
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,9 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.getProductById(id));
+    public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProductResponseDtoById(id));
+
     }
 
     @GetMapping
