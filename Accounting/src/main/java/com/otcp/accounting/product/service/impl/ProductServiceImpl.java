@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponseDTO getProductById(Long id) {
+    public ProductResponseDTO getProductResponseDtoById(Long id) {
         return DtoConverter.convert(productRepository.findByIdAndEntityStatus(id, EntityStatus.ACTIVE)
                 .orElseThrow(EntityNotFoundException::new), ProductResponseDTO.class);
     }
