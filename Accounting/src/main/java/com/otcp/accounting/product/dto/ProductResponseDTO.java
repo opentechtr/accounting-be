@@ -1,15 +1,15 @@
 package com.otcp.accounting.product.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class ProductResponseDTO {
-    String productName;
-    String productCode;
+    String name;
+    String code;
     String description;
-    String price;
+    BigDecimal price;
 }

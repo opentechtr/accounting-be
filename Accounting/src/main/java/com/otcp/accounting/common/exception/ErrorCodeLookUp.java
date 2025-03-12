@@ -12,7 +12,6 @@ public class ErrorCodeLookUp {
     static {
         errorCodes = new HashMap<>();
         errorCodes.put("5000", "ENTITY_NOT_FOUND_EXCEPTION");
-        errorCodes.put("5001", "PRODUCT_NOT_FOUND_EXCEPTION");
     }
 
     public static String getMessageKey(String errorCode) {

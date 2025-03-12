@@ -1,6 +1,7 @@
 
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.dto.DtoConverter;
 import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
@@ -27,17 +28,9 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponseDTO> getProductById(@PathVariable Long id) {
         Product product = productService.getProductById(id);
-        if(product != null) {
-            ProductResponseDTO productResponseDTO = ProductResponseDTO.builder()
-                    .productName(product.getName())
-                    .productCode(product.getCode())
-                    .description(product.getDescription())
-                    .price(product.getPrice().toString())
-                    .build();
+        ProductResponseDTO productResponseDTO = DtoConverter.convert(product, ProductResponseDTO.class);
+        return ResponseEntity.ok(productResponseDTO);
 
-            return ResponseEntity.ok(productResponseDTO);
-        }
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping
