@@ -27,8 +27,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponseDTO getProductResponseDtoById(Long id) {
-        return DtoConverter.convert(productRepository.findByIdAndEntityStatus(id, EntityStatus.ACTIVE)
-                .orElseThrow(EntityNotFoundException::new), ProductResponseDTO.class);
+        Product product = productRepository.findByIdAndEntityStatus(id, EntityStatus.ACTIVE)
+                .orElseThrow(EntityNotFoundException::new);
+        return DtoConverter.convert(product, ProductResponseDTO.class);
     }
 
     @Override
@@ -55,4 +56,5 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> searchProductsByName(String name) {
         return null;
     }
+
 }
