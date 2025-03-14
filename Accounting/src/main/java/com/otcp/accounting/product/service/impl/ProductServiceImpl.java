@@ -1,14 +1,23 @@
 
 package com.otcp.accounting.product.service.impl;
 
+import com.otcp.accounting.common.base.EntityStatus;
+import com.otcp.accounting.common.dto.DtoConverter;
+import com.otcp.accounting.common.exception.EntityNotFoundException;
+import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
+import com.otcp.accounting.product.repository.ProductRepository;
 import com.otcp.accounting.product.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
 
 
     @Override
@@ -17,8 +26,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product getProductById(Long id) {
-        return null;
+    public ProductResponseDTO getProductResponseDtoById(Long id) {
+        Product product = productRepository.findByIdAndEntityStatus(id, EntityStatus.ACTIVE)
+                .orElseThrow(EntityNotFoundException::new);
+        return DtoConverter.convert(product, ProductResponseDTO.class);
     }
 
     @Override
@@ -45,4 +56,5 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> searchProductsByName(String name) {
         return null;
     }
+
 }
