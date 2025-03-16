@@ -37,7 +37,7 @@ class ProductServiceTest {
 
     @Test
     void saveProduct_ShouldSaveSuccessfully()  {
-        // Arrange
+
         ProductResponseDTO productDTO = new ProductResponseDTO();
         productDTO.setName("Test Product");
         productDTO.setCode("P123");
@@ -58,39 +58,37 @@ class ProductServiceTest {
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
         Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
 
-        // Act
-        ProductResponseDTO result = productService.saveProduct(productDTO);
 
-        // Assert
+        ProductResponseDTO result = productService.saveProduct(productDTO);
         assertNotNull(result);
         assertEquals("P123", result.getCode());
     }
 
     @Test
     void saveProduct_ShouldThrowDuplicateException_WhenProductCodeExists() {
-        // Arrange
+
         ProductResponseDTO productDTO = new ProductResponseDTO();
         productDTO.setCode("P123");
-        productDTO.setCategoryId(1L); // DİKKAT: 1L
+        productDTO.setCategoryId(1L);
 
         Mockito.when(productRepository.findByCode("P123")).thenReturn(Optional.of(new Product()));
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(new Category())); // DİKKAT: aynı ID
 
-        // Act & Assert
+
         assertThrows(DuplicateException.class, () -> productService.saveProduct(productDTO));
     }
 
     @Test
     void saveProduct_ShouldThrowEntityNotFoundException_WhenCategoryNotFound() {
-        // Arrange
+
         ProductResponseDTO productDTO = new ProductResponseDTO();
         productDTO.setCode("P999");
-        productDTO.setCategoryId(999L); // olmayan kategori
+        productDTO.setCategoryId(999L);
 
         Mockito.when(productRepository.findByCode("P999")).thenReturn(Optional.empty());
         Mockito.when(categoryRepository.findById(999L)).thenReturn(Optional.empty());
 
-        // Act & Assert
+      
         assertThrows(EntityNotFoundException.class, () -> productService.saveProduct(productDTO));
     }
 }
