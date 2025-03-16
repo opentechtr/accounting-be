@@ -1,27 +1,30 @@
 
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
 
-    public ProductController(ProductService productService) {
-        this.productService = productService;
-    }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        return new ResponseEntity<>(productService.saveProduct(product), HttpStatus.CREATED);
+    public ApiResponse<ProductResponseDTO> saveProduct(@Valid @RequestBody ProductResponseDTO productResponseDTO, Locale locale) {
+        ProductResponseDTO productResponseDTO1=productService.saveProduct(productResponseDTO);
+        return ApiResponse.success(productResponseDTO1);
     }
 
     @GetMapping("/{id}")
