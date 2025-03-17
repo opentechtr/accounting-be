@@ -2,6 +2,7 @@
 package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
+import com.otcp.accounting.product.dto.ProductRequestDTO;
 import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
@@ -22,9 +23,9 @@ public class ProductController {
 
 
     @PostMapping
-    public ApiResponse<ProductResponseDTO> saveProduct(@Valid @RequestBody ProductResponseDTO productResponseDTO, Locale locale) {
-        ProductResponseDTO productResponseDTO1=productService.saveProduct(productResponseDTO);
-        return ApiResponse.success(productResponseDTO1);
+    public ApiResponse<ProductResponseDTO> saveProduct(@Valid @RequestBody ProductRequestDTO productRequestDTO, Locale locale) {
+        ProductResponseDTO productResponseDTO=productService.saveProduct(productRequestDTO);
+        return ApiResponse.success(productResponseDTO);
     }
 
     @GetMapping("/{id}")

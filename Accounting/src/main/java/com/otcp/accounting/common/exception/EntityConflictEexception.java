@@ -2,9 +2,9 @@ package com.otcp.accounting.common.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class DuplicateException extends BaseException{
+public class EntityConflictEexception extends BaseException{
 
-    public DuplicateException() {
+    public EntityConflictEexception() {
         super(HttpStatus.CONFLICT, "5001");
     }
 }

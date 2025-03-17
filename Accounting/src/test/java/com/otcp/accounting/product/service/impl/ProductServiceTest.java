@@ -1,13 +1,13 @@
 package com.otcp.accounting.product.service.impl;
 
-import com.otcp.accounting.common.exception.DuplicateException;
+import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
+import com.otcp.accounting.product.dto.ProductRequestDTO;
 import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.repository.CategoryRepository;
 import com.otcp.accounting.product.repository.ProductRepository;
-import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,7 +38,7 @@ class ProductServiceTest {
     @Test
     void saveProduct_ShouldSaveSuccessfully()  {
 
-        ProductResponseDTO productDTO = new ProductResponseDTO();
+        ProductRequestDTO productDTO = new ProductRequestDTO();
         productDTO.setName("Test Product");
         productDTO.setCode("P123");
         productDTO.setPrice(BigDecimal.valueOf(100.0));
@@ -67,7 +67,7 @@ class ProductServiceTest {
     @Test
     void saveProduct_ShouldThrowDuplicateException_WhenProductCodeExists() {
 
-        ProductResponseDTO productDTO = new ProductResponseDTO();
+        ProductRequestDTO productDTO = new ProductRequestDTO();
         productDTO.setCode("P123");
         productDTO.setCategoryId(1L);
 
@@ -75,13 +75,13 @@ class ProductServiceTest {
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(new Category())); // DİKKAT: aynı ID
 
 
-        assertThrows(DuplicateException.class, () -> productService.saveProduct(productDTO));
+        assertThrows(EntityConflictEexception.class, () -> productService.saveProduct(productDTO));
     }
 
     @Test
     void saveProduct_ShouldThrowEntityNotFoundException_WhenCategoryNotFound() {
 
-        ProductResponseDTO productDTO = new ProductResponseDTO();
+        ProductRequestDTO productDTO = new ProductRequestDTO();
         productDTO.setCode("P999");
         productDTO.setCategoryId(999L);
 
