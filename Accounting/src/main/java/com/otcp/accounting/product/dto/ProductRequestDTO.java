@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class ProductResponseDTO {
+public class ProductRequestDTO {
 
         @NotBlank(message = "Product name is mandatory")
         private String name;
