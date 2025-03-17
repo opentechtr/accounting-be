@@ -20,6 +20,7 @@ import org.mockito.quality.Strictness;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static com.otcp.accounting.product.service.impl.ProductTestProvider.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,21 +39,10 @@ class ProductServiceTest {
     @Test
     void saveProduct_ShouldSaveSuccessfully()  {
 
-        ProductRequestDTO productDTO = new ProductRequestDTO();
-        productDTO.setName("Test Product");
-        productDTO.setCode("P123");
-        productDTO.setPrice(BigDecimal.valueOf(100.0));
-        productDTO.setCategoryId(1L);
+        ProductRequestDTO productDTO = createProductRequestDTO();
+        Category category = getCategory();
+        Product product = getProduct(productDTO,category);
 
-        Category category = new Category();
-        category.setId(1L);
-
-        Product product = new Product();
-        product.setId(1L);
-        product.setName(productDTO.getName());
-        product.setCode(productDTO.getCode());
-        product.setPrice(productDTO.getPrice());
-        product.setCategory(category);
 
         Mockito.when(productRepository.findByCode("P123")).thenReturn(Optional.empty());
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
