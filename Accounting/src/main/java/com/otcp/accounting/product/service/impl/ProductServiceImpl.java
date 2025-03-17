@@ -3,12 +3,18 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.dto.DtoConverter;
+import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
+
+import com.otcp.accounting.product.dto.ProductRequestDTO;
 import com.otcp.accounting.product.dto.ProductResponseDTO;
+import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
+import com.otcp.accounting.product.repository.CategoryRepository;
 import com.otcp.accounting.product.repository.ProductRepository;
 import com.otcp.accounting.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +24,26 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final CategoryRepository categoryRepository;
 
 
     @Override
-    public Product saveProduct(Product product) {
-        return null;
+    public ProductResponseDTO saveProduct(ProductRequestDTO productRequestDTO)  {
+
+        if (productRepository.findByCode(productRequestDTO.getCode()).isPresent()) {
+            throw new EntityConflictEexception();
+        }
+        Category category = categoryRepository.findById(productRequestDTO.getCategoryId())
+                .orElseThrow(EntityNotFoundException::new);
+
+
+        Product product ;
+        product = DtoConverter.convert(productRequestDTO,Product.class);
+        product.setCategory(category);
+         productRepository.save(product);
+         return DtoConverter.convert(product,ProductResponseDTO.class);
+
+
     }
 
     @Override

@@ -1,13 +1,15 @@
 
 package com.otcp.accounting.product.service;
 
+import com.otcp.accounting.product.dto.ProductRequestDTO;
 import com.otcp.accounting.product.dto.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
+import org.apache.coyote.BadRequestException;
 
 import java.util.List;
 
 public interface ProductService {
-    Product saveProduct(Product product);
+    ProductResponseDTO saveProduct(ProductRequestDTO productRequestDTO);
     ProductResponseDTO getProductResponseDtoById(Long id);
     List<Product> getAllProducts();
     List<Product> getProductsByCategory(Long categoryId);
