@@ -1,4 +1,4 @@
-package com.otcp.accounting.product.dto;
+package com.otcp.accounting.product.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
-public class ProductResponseDTO {
+public class ProductRequestDTO {
 
         @NotBlank(message = "Product name is mandatory")
         private String name;

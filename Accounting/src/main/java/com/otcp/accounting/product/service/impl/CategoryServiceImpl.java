@@ -3,19 +3,18 @@ package com.otcp.accounting.product.service.impl;
 import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.dto.DtoConverter;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
-import com.otcp.accounting.common.response.ApiResponse;
-import com.otcp.accounting.common.response.ApiResponseStatus;
-import com.otcp.accounting.product.dto.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.repository.CategoryRepository;
 import com.otcp.accounting.product.service.CategoryService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,9 +30,10 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(Long id) {
-        return null;
+    public CategoryResponseDTO getCategoryById(Long id) {
+        return DtoConverter.convert(categoryRepository.getById(id), CategoryResponseDTO.class);
     }
+
 
     @Override
     public List<Category> getAllCategories() {
