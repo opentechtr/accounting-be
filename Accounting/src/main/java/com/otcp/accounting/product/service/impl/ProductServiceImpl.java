@@ -6,8 +6,8 @@ import com.otcp.accounting.common.dto.DtoConverter;
 import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 
-import com.otcp.accounting.product.dto.ProductRequestDTO;
-import com.otcp.accounting.product.dto.ProductResponseDTO;
+import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.repository.CategoryRepository;

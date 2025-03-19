@@ -11,9 +11,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@Entity
 @Data
+@Entity
 public class Invoice extends BaseEntity {
     @NotBlank(message = "Invoice number is required")
     private String invoiceNumber;
