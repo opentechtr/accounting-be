@@ -2,8 +2,8 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
-import com.otcp.accounting.product.dto.ProductRequestDTO;
-import com.otcp.accounting.product.dto.ProductResponseDTO;
+import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.repository.CategoryRepository;
@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 import static com.otcp.accounting.product.service.impl.ProductTestProvider.*;

@@ -7,9 +7,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @Builder
 public class ApiResponse<T> {
-    private T data;
-    private int httpStatus;
     private ApiResponseStatus status;
+    private int httpStatus;
+    private T data;
 
     public static <T> ApiResponse<T> success(T data) {
         return ApiResponse.<T>builder()

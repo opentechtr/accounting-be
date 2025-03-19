@@ -1,6 +1,6 @@
 package com.otcp.accounting.product.service.impl;
 
-import com.otcp.accounting.product.dto.ProductRequestDTO;
+import com.otcp.accounting.product.dto.request.ProductRequestDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
 
