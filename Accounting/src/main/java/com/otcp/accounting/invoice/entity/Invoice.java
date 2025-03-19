@@ -13,7 +13,6 @@ import java.util.List;
 
 @Data
 @Entity
-@Data
 public class Invoice extends BaseEntity {
     @NotBlank(message = "Invoice number is required")
     private String invoiceNumber;

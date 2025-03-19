@@ -1,10 +1,11 @@
 package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
-import com.otcp.accounting.product.dto.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.service.CategoryService;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,14 +25,14 @@ public class CategoryController {
 
 
     @PostMapping
-    public ApiResponse<Category> createCategory(@RequestBody CreateCategoryDTO categoryDTO) {
+    public ApiResponse<Category> createCategory(@Valid @RequestBody CreateCategoryDTO categoryDTO) {
         Category category = categoryService.saveCategory(categoryDTO);
         return ApiResponse.success(category);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getCategoryById(id));
+    public ResponseEntity<ApiResponse<CategoryResponseDTO>> getCategoryById(@PathVariable Long id) {
+        return ResponseEntity.ok(ApiResponse.success(categoryService.getCategoryById(id)));
     }
 
     @GetMapping

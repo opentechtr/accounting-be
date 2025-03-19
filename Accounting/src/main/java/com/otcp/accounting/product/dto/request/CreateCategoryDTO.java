@@ -1,4 +1,4 @@
-package com.otcp.accounting.product.dto;
+package com.otcp.accounting.product.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

@@ -2,8 +2,8 @@
 package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
-import com.otcp.accounting.product.dto.ProductRequestDTO;
-import com.otcp.accounting.product.dto.ProductResponseDTO;
+import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
 import jakarta.validation.Valid;
