@@ -59,8 +59,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategory(Long categoryId) {
-        return null;
+    public List<ProductResponseDTO> getProductsByCategory(Long categoryId) {
+        List<Product> productList = productRepository.findAllByCategory_Id(categoryId);
+        if (productList.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        return DtoConverter.convertList(productList,ProductResponseDTO.class);
     }
 
     @Override
