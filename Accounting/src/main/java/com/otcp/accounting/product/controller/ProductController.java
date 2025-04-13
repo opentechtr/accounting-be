@@ -40,8 +40,8 @@ public class ProductController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<ProductResponseDTO>> getProductsByCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
+    public ApiResponse<List<ProductResponseDTO>> getProductsByCategory(@PathVariable Long categoryId) {
+        return ApiResponse.success(productService.getProductsByCategory(categoryId));
     }
 
     @PutMapping("/{id}")
