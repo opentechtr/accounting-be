@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.otcp.accounting.product.service.impl.ProductTestProvider.*;
@@ -79,5 +80,38 @@ class ProductServiceTest {
 
       
         assertThrows(EntityNotFoundException.class, () -> productService.saveProduct(productDTO));
+    }
+
+    @Test
+    void getProductsByCategory_ShouldReturnProductList_WhenProductsExist() {
+        Long categoryId = 1L;
+        Category category = new Category();
+        category.setId(categoryId);
+
+        Product product1 = new Product();
+        product1.setId(1L);
+        product1.setCategory(category);
+
+        Product product2 = new Product();
+        product2.setId(2L);
+        product2.setCategory(category);
+
+        List<Product> productList = List.of(product1, product2);
+
+        Mockito.when(productRepository.findAllByCategory_Id(categoryId)).thenReturn(productList);
+
+        List<ProductResponseDTO> result = productService.getProductsByCategory(categoryId);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+    }
+
+    @Test
+    void getProductsByCategory_ShouldThrowEntityNotFoundException_WhenNoProductsExist() {
+        Long categoryId = 1L;
+
+        Mockito.when(productRepository.findAllByCategory_Id(categoryId)).thenReturn(List.of());
+
+        assertThrows(EntityNotFoundException.class, () -> productService.getProductsByCategory(categoryId));
     }
 }
