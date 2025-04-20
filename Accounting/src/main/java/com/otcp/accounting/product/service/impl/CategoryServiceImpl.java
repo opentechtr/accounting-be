@@ -59,4 +59,9 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Category> searchCategoriesByName(String name) {
         return null;
     }
+
+    @Override
+    public Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(EntityNotFoundException::new);
+    }
 }
