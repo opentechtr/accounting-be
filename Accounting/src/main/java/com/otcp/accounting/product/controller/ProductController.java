@@ -3,6 +3,7 @@ package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.request.ProductUpdateDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
@@ -44,9 +45,9 @@ public class ProductController {
         return ApiResponse.success(productService.getProductsByCategory(categoryId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+    @PutMapping
+    public ApiResponse<ProductResponseDTO> updateProduct(@Valid @RequestBody ProductUpdateDTO productUpdateDTO) {
+        return ApiResponse.success(productService.updateProduct(productUpdateDTO));
     }
 
     @DeleteMapping("/{id}")
