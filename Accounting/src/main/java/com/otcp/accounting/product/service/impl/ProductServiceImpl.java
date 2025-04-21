@@ -105,12 +105,23 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProduct(Long id) {
+        Product product = getProduct(id);
 
+        if (product.getEntityStatus() == EntityStatus.DELETED) {
+            throw new EntityNotFoundException();
+        }
+
+        product.delete();
+        productRepository.save(product);
     }
 
     @Override
     public List<Product> searchProductsByName(String name) {
         return null;
+    }
+
+    private Product getProduct(Long id) {
+        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
 }
