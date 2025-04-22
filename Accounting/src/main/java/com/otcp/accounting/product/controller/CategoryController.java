@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -25,9 +26,9 @@ public class CategoryController {
 
 
     @PostMapping
-    public ApiResponse<Category> createCategory(@Valid @RequestBody CreateCategoryDTO categoryDTO) {
-        Category category = categoryService.saveCategory(categoryDTO);
-        return ApiResponse.success(category);
+    public ApiResponse<CategoryResponseDTO> createCategory(@Valid @RequestBody CreateCategoryDTO categoryDTO, Locale locale) {
+        CategoryResponseDTO categoryResponseDTO = categoryService.saveCategory(categoryDTO);
+        return ApiResponse.success(categoryResponseDTO);
     }
 
     @GetMapping("/{id}")
