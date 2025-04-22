@@ -7,15 +7,18 @@ import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.request.ProductUpdateDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.repository.CategoryRepository;
 import com.otcp.accounting.product.repository.ProductRepository;
+import com.otcp.accounting.product.service.CategoryService;
 import com.otcp.accounting.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -25,6 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
 
     @Override
@@ -69,8 +73,34 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
-        return null;
+    public ProductResponseDTO updateProduct(ProductUpdateDTO productUpdateDTO) {
+        Product product = getProductById(productUpdateDTO.getId());
+        boolean isCodeChanged = !product.getCode().equals(productUpdateDTO.getCode());
+
+        if (isCodeChanged) {
+            productRepository.findByCode(productUpdateDTO.getCode())
+                    .filter(p -> !p.getId().equals(productUpdateDTO.getId()))
+                    .ifPresent(p -> {
+                        throw new EntityConflictEexception();
+                    });
+            product.setCode(productUpdateDTO.getCode());
+        }
+
+        if (StringUtils.hasText(productUpdateDTO.getDescription())) {
+            product.setDescription(productUpdateDTO.getDescription());
+        }
+
+        product.setName(productUpdateDTO.getName());
+        product.setPrice(productUpdateDTO.getPrice());
+        product.setCategory(categoryService.getCategory(productUpdateDTO.getCategoryId()));
+
+        productRepository.save(product);
+
+        return DtoConverter.convert(product, ProductResponseDTO.class);
+    }
+
+    private Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

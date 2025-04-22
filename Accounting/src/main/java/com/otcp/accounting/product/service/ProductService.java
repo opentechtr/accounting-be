@@ -2,6 +2,7 @@
 package com.otcp.accounting.product.service;
 
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.request.ProductUpdateDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 
@@ -12,7 +13,7 @@ public interface ProductService {
     ProductResponseDTO getProductResponseDtoById(Long id);
     List<Product> getAllProducts();
     List<ProductResponseDTO> getProductsByCategory(Long categoryId);
-    Product updateProduct(Long id, Product product);
+    ProductResponseDTO updateProduct(ProductUpdateDTO productUpdateDTO);
     void deleteProduct(Long id);
     List<Product> searchProductsByName(String name);
 }
