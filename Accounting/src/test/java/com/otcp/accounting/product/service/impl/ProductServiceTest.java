@@ -1,5 +1,6 @@
 package com.otcp.accounting.product.service.impl;
 
+import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
@@ -210,6 +211,45 @@ class ProductServiceTest {
         Mockito.when(productRepository.findById(updateDTO.getId())).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> productService.updateProduct(updateDTO));
+    }
+
+
+    @Test
+    void deleteProduct_ShouldMarkProductAsDeleted_WhenProductExistsAndActive() {
+        Long productId = 1L;
+        Product product = new Product();
+        product.setId(productId);
+        product.setEntityStatus(EntityStatus.ACTIVE);
+
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+        Mockito.when(productRepository.save(Mockito.any(Product.class))).thenReturn(product);
+
+        assertDoesNotThrow(() -> productService.deleteProduct(productId));
+        assertEquals(EntityStatus.DELETED, product.getEntityStatus());
+        Mockito.verify(productRepository).save(product);
+    }
+
+    @Test
+    void deleteProduct_ShouldThrowException_WhenProductAlreadyDeleted() {
+        Long productId = 2L;
+        Product product = new Product();
+        product.setId(productId);
+        product.setEntityStatus(EntityStatus.DELETED);
+
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.of(product));
+
+        assertThrows(EntityNotFoundException.class, () -> productService.deleteProduct(productId));
+        Mockito.verify(productRepository, Mockito.never()).save(Mockito.any());
+    }
+
+    @Test
+    void deleteProduct_ShouldThrowException_WhenProductNotFound() {
+        Long productId = 3L;
+
+        Mockito.when(productRepository.findById(productId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> productService.deleteProduct(productId));
+        Mockito.verify(productRepository, Mockito.never()).save(Mockito.any());
     }
 
 }
