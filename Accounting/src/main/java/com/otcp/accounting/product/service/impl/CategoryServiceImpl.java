@@ -2,8 +2,10 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.dto.DtoConverter;
+import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.repository.CategoryRepository;
@@ -41,8 +43,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Long id, Category category) {
-        return null;
+    public Category updateCategory(UpdateCategoryDTO updateCategoryDTO) {
+        Category category = getCategory(updateCategoryDTO.getId());
+
+        Optional.ofNullable(updateCategoryDTO.getName())
+                .ifPresent(name -> {
+                    if (categoryRepository.existsByName(name)) {
+                        throw new EntityConflictEexception();
+                    }
+                    category.setName(name);
+                });
+
+        category.setDescription(updateCategoryDTO.getDescription());
+
+        return categoryRepository.save(category);
     }
 
     @Override
