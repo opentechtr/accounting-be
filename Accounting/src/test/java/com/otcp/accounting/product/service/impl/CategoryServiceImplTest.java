@@ -1,5 +1,7 @@
 package com.otcp.accounting.product.service.impl;
 
+import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.repository.CategoryRepository;
@@ -13,7 +15,7 @@ import org.mockito.quality.Strictness;
 
 import static com.otcp.accounting.product.service.impl.CategoryTestProvider.getCategory;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -36,5 +38,59 @@ class CategoryServiceImplTest {
 
         assertNotNull(actualResult);
         assertEquals(expectedCategory.getName(), actualResult.getName());
+    }
+
+    @Test
+    void test_updateCategory_successful() {
+        Long categoryId = 1L;
+        Category existingCategory = getCategory();
+        existingCategory.setId(categoryId);
+        String newCategoryName = "Updated Category Name";
+        String newDescription = "Updated description";
+
+        UpdateCategoryDTO updateCategoryDTO = new UpdateCategoryDTO();
+        updateCategoryDTO.setId(categoryId);
+        updateCategoryDTO.setName(newCategoryName);
+        updateCategoryDTO.setDescription(newDescription);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(java.util.Optional.of(existingCategory));
+        when(categoryRepository.existsByName(newCategoryName)).thenReturn(false);
+        when(categoryRepository.save(any(Category.class))).thenReturn(existingCategory);
+
+        Category updatedCategory = categoryServiceImpl.updateCategory(updateCategoryDTO);
+
+        assertNotNull(updatedCategory);
+        assertEquals(newCategoryName, updatedCategory.getName());
+        assertEquals(newDescription, updatedCategory.getDescription());
+
+        verify(categoryRepository, times(1)).existsByName(newCategoryName);
+        verify(categoryRepository, times(1)).save(updatedCategory);
+    }
+
+    @Test
+    void test_updateCategory_nameConflict() {
+        Long categoryId = 1L;
+        Category existingCategory = getCategory();
+        existingCategory.setId(categoryId);
+        String conflictingCategoryName = "Existing Category Name";
+        String newDescription = "Updated description";
+
+        UpdateCategoryDTO updateCategoryDTO = new UpdateCategoryDTO();
+        updateCategoryDTO.setId(categoryId);
+        updateCategoryDTO.setName(conflictingCategoryName);
+        updateCategoryDTO.setDescription(newDescription);
+
+        when(categoryRepository.findById(categoryId)).thenReturn(java.util.Optional.of(existingCategory));
+        when(categoryRepository.existsByName(conflictingCategoryName)).thenReturn(true);
+
+        EntityConflictEexception exception = assertThrows(EntityConflictEexception.class, () -> {
+            categoryServiceImpl.updateCategory(updateCategoryDTO);
+        });
+
+        assertNotNull(exception);
+        assertEquals("5001", exception.getErrorCode());
+
+        verify(categoryRepository, times(1)).existsByName(conflictingCategoryName);
+        verify(categoryRepository, never()).save(any());
     }
 }
