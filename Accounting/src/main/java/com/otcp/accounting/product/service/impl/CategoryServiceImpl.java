@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,10 +67,13 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category);
     }
 
-
     @Override
-    public List<Category> searchCategoriesByName(String name) {
-        return null;
+    public List<CategoryResponseDTO> searchCategoriesByName(String categoryName) {
+        List<Category> categoryList = categoryRepository.findAllByNameContainingIgnoreCase(categoryName);
+        if (categoryList.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return DtoConverter.convertList(categoryList, CategoryResponseDTO.class);
     }
 
     @Override

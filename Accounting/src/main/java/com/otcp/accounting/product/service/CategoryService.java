@@ -13,6 +13,6 @@ public interface CategoryService {
     List<Category> getAllCategories();
     Category updateCategory(UpdateCategoryDTO updateCategoryDTO);
     void deleteCategory(Long id);
-    List<Category> searchCategoriesByName(String name);
+    List<CategoryResponseDTO> searchCategoriesByName(String categoryName);
     Category getCategory(Long categoryId);
 }
