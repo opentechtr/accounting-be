@@ -54,7 +54,7 @@ public class CategoryController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<Category>> searchCategoriesByName(@RequestParam String name) {
-        return ResponseEntity.ok(categoryService.searchCategoriesByName(name));
+    public ApiResponse<List<CategoryResponseDTO>> searchCategoriesByName(@RequestParam String categoryName) {
+        return ApiResponse.success(categoryService.searchCategoriesByName(categoryName));
     }
 }
