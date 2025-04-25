@@ -1,5 +1,6 @@
 package com.otcp.accounting.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.otcp.accounting.common.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -26,5 +27,6 @@ public class Category extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private List<Product> products = new ArrayList<>();
 }

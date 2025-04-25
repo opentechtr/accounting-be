@@ -1,6 +1,7 @@
 package com.otcp.accounting.product.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.otcp.accounting.common.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -38,6 +39,7 @@ public class Product extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
+    @JsonBackReference
     private Category category;
 
 }
