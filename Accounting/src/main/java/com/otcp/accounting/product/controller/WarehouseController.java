@@ -1,8 +1,10 @@
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.response.ApiResponse;
+import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 import com.otcp.accounting.product.service.WarehouseService;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +22,8 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public ResponseEntity<Warehouse> createWarehouse(@RequestBody Warehouse warehouse) {
-        return new ResponseEntity<>(warehouseService.saveWarehouse(warehouse), HttpStatus.CREATED);
+    public ApiResponse<Warehouse> createWarehouse(@Valid @RequestBody CreateWarehouseDTO warehouseDTO) {
+        return ApiResponse.success(warehouseService.saveWarehouse(warehouseDTO));
     }
 
     @GetMapping("/{id}")
