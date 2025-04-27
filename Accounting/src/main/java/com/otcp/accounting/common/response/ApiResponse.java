@@ -26,4 +26,12 @@ public class ApiResponse<T> {
                 .httpStatus(HttpStatus.OK.value())
                 .build();
     }
+
+    public static <T> ApiResponse<T> noContent() {
+        return ApiResponse.<T>builder()
+                .data(null)
+                .status(ApiResponseStatus.SUCCESS)
+                .httpStatus(HttpStatus.NO_CONTENT.value())
+                .build();
+    }
 }
