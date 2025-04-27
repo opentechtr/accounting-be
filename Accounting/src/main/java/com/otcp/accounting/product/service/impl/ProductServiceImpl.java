@@ -11,7 +11,6 @@ import com.otcp.accounting.product.dto.request.ProductUpdateDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
-import com.otcp.accounting.product.repository.CategoryRepository;
 import com.otcp.accounting.product.repository.ProductRepository;
 import com.otcp.accounting.product.service.CategoryService;
 import com.otcp.accounting.product.service.ProductService;
@@ -27,9 +26,8 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
-    private final CategoryService categoryService;
 
+    private final CategoryService categoryService;
 
     @Override
     public ProductResponseDTO saveProduct(ProductRequestDTO productRequestDTO)  {
@@ -37,9 +35,7 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.findByCode(productRequestDTO.getCode()).isPresent()) {
             throw new EntityConflictEexception();
         }
-        Category category = categoryRepository.findById(productRequestDTO.getCategoryId())
-                .orElseThrow(EntityNotFoundException::new);
-
+        Category category = categoryService.getCategory(productRequestDTO.getCategoryId());
 
         Product product ;
         product = DtoConverter.convert(productRequestDTO,Product.class);
