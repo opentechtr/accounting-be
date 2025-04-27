@@ -2,6 +2,7 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
+import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.repository.CategoryRepository;
@@ -12,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import java.util.Collections;
+import java.util.List;
 
 import static com.otcp.accounting.product.service.impl.CategoryTestProvider.getCategory;
 import static org.junit.jupiter.api.Assertions.*;
@@ -92,5 +96,31 @@ class CategoryServiceImplTest {
 
         verify(categoryRepository, times(1)).existsByName(conflictingCategoryName);
         verify(categoryRepository, never()).save(any());
+    }
+
+    @Test
+    void test_searchCategoriesByName_successful() {
+        String categoryName = "Electronics";
+        Category category = getCategory();
+        category.setName(categoryName);
+
+        when(categoryRepository.findAllByNameContainingIgnoreCase(categoryName)).thenReturn(List.of(category));
+
+        List<CategoryResponseDTO> result = categoryServiceImpl.searchCategoriesByName(categoryName);
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(category.getName(), result.get(0).getName());
+    }
+
+    @Test
+    void test_searchCategoriesByName_notFound_shouldThrowNotFoundException() {
+        String nonExistentcategoryName = "Non Existent Category";
+
+        when(categoryRepository.findAllByNameContainingIgnoreCase(nonExistentcategoryName)).thenReturn(Collections.emptyList());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> categoryServiceImpl.searchCategoriesByName(nonExistentcategoryName));
+
+        assertEquals("5000", exception.getErrorCode());
     }
 }
