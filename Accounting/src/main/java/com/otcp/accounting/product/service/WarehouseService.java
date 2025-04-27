@@ -1,11 +1,12 @@
 package com.otcp.accounting.product.service;
 
+import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 
 import java.util.List;
 
 public interface WarehouseService {
-    Warehouse saveWarehouse(Warehouse warehouse);
+    Warehouse saveWarehouse(CreateWarehouseDTO warehouseDTO);
     Warehouse getWarehouseById(Long id);
     List<Warehouse> getAllWarehouses();
     Warehouse updateWarehouse(Long id, Warehouse warehouse);
