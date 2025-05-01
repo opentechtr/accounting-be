@@ -1,5 +1,6 @@
 package com.otcp.accounting.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.otcp.accounting.common.base.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -21,10 +22,12 @@ public class Stock extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
+    @JsonBackReference
     private Product product;
 
     @ManyToOne
     @JoinColumn(name = "warehouse_id", nullable = false)
+    @JsonBackReference
     private Warehouse warehouse;
 
 }
