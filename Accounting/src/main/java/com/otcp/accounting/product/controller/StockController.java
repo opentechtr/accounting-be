@@ -1,7 +1,11 @@
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.response.ApiResponse;
+import com.otcp.accounting.product.dto.request.UpdateStockDTO;
+import com.otcp.accounting.product.dto.response.StockResponseDTO;
 import com.otcp.accounting.product.entity.Stock;
 import com.otcp.accounting.product.service.StockService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +38,10 @@ public class StockController {
         return ResponseEntity.ok(stockService.getAllStocks());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Stock> updateStock(@PathVariable Long id, @RequestBody Stock stock) {
-        return ResponseEntity.ok(stockService.updateStock(id, stock));
+    @PutMapping
+    public ApiResponse<StockResponseDTO> updateStock(@Valid @RequestBody UpdateStockDTO updateStockDTO) {
+        StockResponseDTO stockResponseDTO = stockService.updateStock(updateStockDTO);
+        return ApiResponse.success(stockResponseDTO);
     }
 
     @DeleteMapping("/{id}")
