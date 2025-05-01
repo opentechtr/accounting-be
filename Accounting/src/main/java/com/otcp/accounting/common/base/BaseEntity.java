@@ -30,14 +30,14 @@ public abstract class BaseEntity {
     private String guid = UUID.randomUUID().toString();
 
     @CreatedBy
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User createdBy;
 
     @CreatedDate
     private LocalDateTime createdDate;
 
     @LastModifiedBy
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private User modifiedBy;
 
     @LastModifiedDate
