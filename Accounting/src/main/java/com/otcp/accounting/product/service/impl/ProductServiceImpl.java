@@ -95,7 +95,8 @@ public class ProductServiceImpl implements ProductService {
         return DtoConverter.convert(product, ProductResponseDTO.class);
     }
 
-    private Product getProductById(Long id) {
+    @Override
+    public Product getProductById(Long id) {
         return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
