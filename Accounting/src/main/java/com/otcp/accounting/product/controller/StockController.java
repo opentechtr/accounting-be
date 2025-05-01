@@ -1,5 +1,6 @@
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.entity.Stock;
 import com.otcp.accounting.product.service.StockService;
 import org.springframework.http.HttpStatus;
@@ -40,8 +41,8 @@ public class StockController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteStock(@PathVariable Long id) {
+    public ApiResponse<Void> deleteStock(@PathVariable Long id) {
         stockService.deleteStock(id);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.noContent();
     }
 }
