@@ -67,6 +67,7 @@ public class StockServiceImpl implements StockService {
 
     @Override
     public void deleteStock(Long id) {
-
+        Stock stock = getStockById(id);
+        stockRepository.delete(stock);
     }
 }
