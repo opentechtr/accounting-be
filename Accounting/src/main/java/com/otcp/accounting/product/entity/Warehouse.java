@@ -1,5 +1,6 @@
 package com.otcp.accounting.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.otcp.accounting.common.base.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -23,7 +24,8 @@ public class Warehouse extends BaseEntity {
     @NotBlank(message = "Location is mandatory")
     private String location;
 
-    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Stock> stocks = new ArrayList<>();
 
 }
