@@ -1,6 +1,7 @@
 package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 import com.otcp.accounting.product.repository.WarehouseRepository;
@@ -61,5 +62,40 @@ public class WarehouseServiceImplTest {
 
         verify(warehouseRepository, times(1)).existsByName(warehouseDTO.getName());
         verify(warehouseRepository, never()).save(any(Warehouse.class));
+    }
+
+    @Test
+    void test_getWarehouseById_successful() {
+        Long warehouseId = 1L;
+
+        CreateWarehouseDTO warehouseDTO = createWarehouseRequestDTO();
+        Warehouse warehouse = getWarehouse(warehouseDTO);
+
+        when(warehouseRepository.findById(warehouseId)).thenReturn(java.util.Optional.of(warehouse));
+
+        var response = warehouseServiceImpl.getWarehouseById(warehouseId);
+
+        assertNotNull(response);
+        assertEquals(warehouse.getName(), response.getName());
+        assertEquals(warehouse.getLocation(), response.getLocation());
+        assertEquals(warehouse.getStocks(), response.getStocks());
+
+        verify(warehouseRepository, times(1)).findById(warehouseId);
+    }
+
+    @Test
+    void test_getWarehouseById_notFound_shouldThrowException() {
+        Long warehouseId = 1L;
+
+        when(warehouseRepository.findById(warehouseId)).thenReturn(java.util.Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, () -> {
+            warehouseServiceImpl.getWarehouseById(warehouseId);
+        });
+
+        assertNotNull(exception);
+        assertEquals("5000", exception.getErrorCode());
+
+        verify(warehouseRepository, times(1)).findById(warehouseId);
     }
 }
