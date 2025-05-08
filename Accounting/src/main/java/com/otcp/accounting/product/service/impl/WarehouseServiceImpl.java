@@ -5,6 +5,7 @@ import com.otcp.accounting.common.dto.DtoConverter;
 import com.otcp.accounting.common.exception.EntityConflictEexception;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
+import com.otcp.accounting.product.dto.response.WarehouseResponseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 import com.otcp.accounting.product.repository.WarehouseRepository;
 import com.otcp.accounting.product.service.WarehouseService;
@@ -32,8 +33,10 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
-    public Warehouse getWarehouseById(Long id) {
-        return warehouseRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public WarehouseResponseDTO getWarehouseById(Long id) {
+        Warehouse warehouse = findWarehouseById(id);
+
+        return DtoConverter.convert(warehouse, WarehouseResponseDTO.class);
     }
 
     @Override
