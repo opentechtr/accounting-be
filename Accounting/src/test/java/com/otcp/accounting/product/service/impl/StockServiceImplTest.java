@@ -54,7 +54,7 @@ public class StockServiceImplTest {
 
         when(stockRepository.findById(existingStock.getId())).thenReturn(Optional.of(existingStock));
         when(productService.getProductById(newProduct.getId())).thenReturn(newProduct);
-        when(warehouseService.getWarehouseById(newWarehouse.getId())).thenReturn(newWarehouse);
+        when(warehouseService.findWarehouseById(newWarehouse.getId())).thenReturn(newWarehouse);
         when(stockRepository.save(any(Stock.class))).thenReturn(existingStock);
 
         StockResponseDTO result = stockService.updateStock(updateStockDTO);

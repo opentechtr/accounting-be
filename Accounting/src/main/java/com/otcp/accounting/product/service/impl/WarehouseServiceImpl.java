@@ -37,6 +37,11 @@ public class WarehouseServiceImpl implements WarehouseService {
     }
 
     @Override
+    public Warehouse findWarehouseById(Long id) {
+        return warehouseRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Override
     public List<Warehouse> getAllWarehouses() {
         return null;
     }

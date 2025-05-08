@@ -57,7 +57,7 @@ public class StockServiceImpl implements StockService {
         }
 
         if (updateStockDTO.getWarehouseId() != null) {
-            stock.setWarehouse(warehouseService.getWarehouseById(updateStockDTO.getWarehouseId()));
+            stock.setWarehouse(warehouseService.findWarehouseById(updateStockDTO.getWarehouseId()));
         }
 
         stockRepository.save(stock);
