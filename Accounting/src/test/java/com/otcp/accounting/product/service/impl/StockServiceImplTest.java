@@ -79,4 +79,26 @@ public class StockServiceImplTest {
         assertThrows(EntityNotFoundException.class, () -> stockService.updateStock(updateStockDTO));
         verify(stockRepository, never()).save(any());
     }
+
+    @Test
+    void test_getStockById_successful() {
+        Stock stock = getStock();
+        when(stockRepository.findById(stock.getId())).thenReturn(Optional.of(stock));
+
+        Stock result = stockService.getStockById(stock.getId());
+
+        assertNotNull(result);
+        assertEquals(stock.getId(), result.getId());
+        assertEquals(stock.getQuantity(), result.getQuantity());
+        verify(stockRepository, times(1)).findById(stock.getId());
+    }
+
+    @Test
+    void test_getById_notFound_shouldThrowException() {
+        Long notExistStockId = 999L;
+        when(stockRepository.findById(notExistStockId)).thenReturn(Optional.empty());
+
+        assertThrows(EntityNotFoundException.class, () -> stockService.getStockById(notExistStockId));
+        verify(stockRepository, times(1)).findById(notExistStockId);
+    }
 }
