@@ -2,7 +2,9 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.dto.DtoConverter;
+import com.otcp.accounting.common.dto.FilterDTO;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
+import com.otcp.accounting.common.utils.PaginationUtils;
 import com.otcp.accounting.product.dto.request.UpdateStockDTO;
 import com.otcp.accounting.product.dto.response.StockResponseDTO;
 import com.otcp.accounting.product.entity.Stock;
@@ -11,9 +13,8 @@ import com.otcp.accounting.product.service.ProductService;
 import com.otcp.accounting.product.service.StockService;
 import com.otcp.accounting.product.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 
 @Service
@@ -37,8 +38,8 @@ public class StockServiceImpl implements StockService {
     }
 
     @Override
-    public List<Stock> getAllStocks() {
-        return null;
+    public Page<Stock> getAllStocks(FilterDTO filterDTO) {
+        return stockRepository.findAll(PaginationUtils.buildPagination(filterDTO));
     }
 
     @Override
