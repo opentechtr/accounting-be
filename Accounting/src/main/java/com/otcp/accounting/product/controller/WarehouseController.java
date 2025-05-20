@@ -2,6 +2,7 @@ package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
+import com.otcp.accounting.product.dto.response.WarehouseResponseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 import com.otcp.accounting.product.service.WarehouseService;
 import jakarta.validation.Valid;
@@ -27,8 +28,8 @@ public class WarehouseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Warehouse> getWarehouseById(@PathVariable Long id) {
-        return ResponseEntity.ok(warehouseService.getWarehouseById(id));
+    public ApiResponse<WarehouseResponseDTO> getWarehouseById(@PathVariable Long id) {
+        return ApiResponse.success(warehouseService.getWarehouseById(id));
     }
 
     @GetMapping
