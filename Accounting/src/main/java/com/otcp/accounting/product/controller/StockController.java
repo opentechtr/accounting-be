@@ -29,8 +29,8 @@ public class StockController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Stock> getStockById(@PathVariable Long id) {
-        return ResponseEntity.ok(stockService.getStockById(id));
+    public ApiResponse<Stock> getStockById(@PathVariable Long id) {
+        return ApiResponse.success(stockService.getStockById(id));
     }
 
     @GetMapping
