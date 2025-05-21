@@ -46,40 +46,6 @@ public class WarehouseServiceImpl implements WarehouseService {
         return null;
     }
 
-//    @Override
-//    public Warehouse updateWarehouse(Long id, Warehouse warehouse) {
-//        logger.info("Attempting to update warehouse with ID: {}", id);
-//
-//        try {
-//            Warehouse existingWarehouse = warehouseRepository.getById(id);
-//            if (!StringUtils.hasText(warehouse.getName())) {
-//                logger.error("Warehouse name cannot be empty");
-//                throw new BadRequestException("4001");
-//            }
-//            if (!StringUtils.hasText(warehouse.getLocation())) {
-//                logger.error("Warehouse location cannot be empty");
-//                throw new BadRequestException("4002");
-//            }
-//
-//            if (!existingWarehouse.getName().equals(warehouse.getName()) &&
-//                    warehouseRepository.existsByNameAndIdNot(warehouse.getName(),id)) { // güncellenen depo hariç tutuluyor, başka depolarda aynı isim varsa hata fırlatılıyor.
-//                logger.error("Warehouse name '{}' is already in use", warehouse.getName());
-//                //throw new EntityConflictException("4091");
-//                //TODO: Burada aynı mantıkla, hata kodlarını doğru şekilde yönetmek için EntityConflictException da güncellenmeli
-//                throw new EntityConflictException();
-//            }
-//
-//            existingWarehouse.setName(warehouse.getName());
-//            existingWarehouse.setLocation(warehouse.getLocation());
-//
-//            Warehouse updatedWarehouse = warehouseRepository.save(existingWarehouse);
-//            logger.info("Successfully updated warehouse with ID: {} ", id);
-//            return updatedWarehouse;
-//        } catch (EntityNotFoundException e) {
-//            logger.error("Warehouse with ID: {} not found", id, e);
-//            throw e;
-//        }
-//    }
 
     @Override
     public Warehouse updateWarehouse(Long id, Warehouse warehouse) {
