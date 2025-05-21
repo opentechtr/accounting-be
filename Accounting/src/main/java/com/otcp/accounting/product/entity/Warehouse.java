@@ -16,12 +16,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Warehouse extends BaseEntity {
-    @NotBlank(message = "Warehouse name is mandatory")
+    @NotBlank(message = "{BAD_REQUEST_WAREHOUSE_EMPTY_NAME_EXCEPTION}")
     @Column(unique = true)
     private String name;
 
-    @NotBlank(message = "Location is mandatory")
+    @NotBlank(message = "{BAD_REQUEST_WAREHOUSE_EMPTY_LOCATION_EXCEPTION}")
     private String location;
+
 
     @OneToMany(mappedBy = "warehouse", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Stock> stocks = new ArrayList<>();

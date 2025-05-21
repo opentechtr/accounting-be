@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/warehouses")
+@RequestMapping("/api/v1/warehouses")
 public class WarehouseController {
     private final WarehouseService warehouseService;
 
@@ -36,9 +36,10 @@ public class WarehouseController {
         return ResponseEntity.ok(warehouseService.getAllWarehouses());
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Warehouse> updateWarehouse(@PathVariable Long id, @RequestBody Warehouse warehouse) {
-        return ResponseEntity.ok(warehouseService.updateWarehouse(id, warehouse));
+    public ApiResponse<Warehouse> updateWarehouse(@Valid @RequestBody Warehouse warehouse, @PathVariable Long id) {
+        return ApiResponse.success(warehouseService.updateWarehouse(id, warehouse));
     }
 
     @DeleteMapping("/{id}")
