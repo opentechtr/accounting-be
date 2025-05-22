@@ -1,15 +1,16 @@
 package com.otcp.accounting.product.service;
 
+import com.otcp.accounting.common.dto.FilterDTO;
 import com.otcp.accounting.product.dto.request.UpdateStockDTO;
 import com.otcp.accounting.product.dto.response.StockResponseDTO;
 import com.otcp.accounting.product.entity.Stock;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 
 public interface StockService {
     Stock saveStock(Stock stock);
     Stock getStockById(Long id);
-    List<Stock> getAllStocks();
+    Page<Stock> getAllStocks(FilterDTO filterDTO);
     StockResponseDTO updateStock(UpdateStockDTO updateStockDTO);
     void deleteStock(Long id);
 }
