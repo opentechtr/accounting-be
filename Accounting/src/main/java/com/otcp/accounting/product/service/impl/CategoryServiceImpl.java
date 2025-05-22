@@ -2,7 +2,7 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.dto.DtoConverter;
-import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
 import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
@@ -49,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
         Optional.ofNullable(updateCategoryDTO.getName())
                 .ifPresent(name -> {
                     if (categoryRepository.existsByName(name)) {
-                        throw new EntityConflictEexception();
+                        throw new EntityConflictException();
                     }
                     category.setName(name);
                 });
