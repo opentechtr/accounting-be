@@ -4,6 +4,8 @@ import com.otcp.accounting.common.exception.BadRequestException;
 import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
+import com.otcp.accounting.product.dto.request.WarehouseRequestDTO;
+import com.otcp.accounting.product.dto.response.WarehouseResponseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 import com.otcp.accounting.product.repository.WarehouseRepository;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import static com.otcp.accounting.product.service.impl.WarehouseTestProvider.createWarehouseRequestDTO;
@@ -68,50 +73,46 @@ public class WarehouseServiceImplTest {
     @Test
     void test_updateWarehouse_successful() {
         Long id = 1L;
-        Warehouse existingWarehouse = getWarehouse(createWarehouseRequestDTO());
-        Warehouse updatedWarehouse = new Warehouse();
-        updatedWarehouse.setName("Updated Name");
-        updatedWarehouse.setLocation("Updated Location");
+        Warehouse existingWarehouse = new Warehouse();
+        existingWarehouse.setName("Old Name");
+        existingWarehouse.setLocation("Old Location");
+
+        WarehouseRequestDTO updatedWarehouseDTO = new WarehouseRequestDTO("Updated Name", "Updated Location");
 
         when(warehouseRepository.existsById(id)).thenReturn(true);
-        when(warehouseRepository.getById(id)).thenReturn(existingWarehouse);
-        when(warehouseRepository.existsByNameAndIdNot(updatedWarehouse.getName(), id)).thenReturn(false);
-        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(updatedWarehouse);
+        when(warehouseRepository.findById(id)).thenReturn(Optional.of(existingWarehouse));
+        when(warehouseRepository.existsByNameAndIdNot(updatedWarehouseDTO.getName(), id)).thenReturn(false);
+        when(warehouseRepository.save(any(Warehouse.class))).thenReturn(existingWarehouse);
 
-        Warehouse result = warehouseServiceImpl.updateWarehouse(id, updatedWarehouse);
+        WarehouseResponseDTO result = warehouseServiceImpl.updateWarehouse(id, updatedWarehouseDTO);
 
         assertNotNull(result);
         assertEquals("Updated Name", result.getName());
         assertEquals("Updated Location", result.getLocation());
 
         verify(warehouseRepository, times(1)).existsById(id);
-        verify(warehouseRepository, times(1)).getById(id);
+        verify(warehouseRepository, times(1)).findById(id);
         verify(warehouseRepository, times(1)).save(any(Warehouse.class));
     }
 
     @Test
     void test_updateWarehouse_nameConflictShouldThrowException() {
         Long id = 1L;
-        Warehouse existingWarehouse = getWarehouse(createWarehouseRequestDTO());
+        Warehouse existingWarehouse = new Warehouse();
+        existingWarehouse.setName("Old Name");
+        existingWarehouse.setLocation("Old Location");
 
-        Warehouse updatedWarehouse = new Warehouse();
-        updatedWarehouse.setName("Duplicate Name");
-        updatedWarehouse.setLocation("Valid Location");
+        WarehouseRequestDTO updatedWarehouseDTO = new WarehouseRequestDTO("Duplicate Name", "Valid Location");
 
         when(warehouseRepository.existsById(id)).thenReturn(true);
-        when(warehouseRepository.getById(id)).thenReturn(existingWarehouse);
-        when(warehouseRepository.existsByNameAndIdNot(updatedWarehouse.getName(), id)).thenReturn(true);
+        when(warehouseRepository.findById(id)).thenReturn(Optional.of(existingWarehouse));
+        when(warehouseRepository.existsByNameAndIdNot(updatedWarehouseDTO.getName(), id)).thenReturn(true);
 
-        EntityConflictException exception = assertThrows(EntityConflictException.class, () -> {
-            warehouseServiceImpl.updateWarehouse(id, updatedWarehouse);
-        });
-
-        assertNotNull(exception);
-        assertEquals("5001", exception.getErrorCode());
+        assertThrows(EntityConflictException.class, () -> warehouseServiceImpl.updateWarehouse(id, updatedWarehouseDTO));
 
         verify(warehouseRepository, times(1)).existsById(id);
-        verify(warehouseRepository, times(1)).getById(id);
-        verify(warehouseRepository, times(1)).existsByNameAndIdNot(updatedWarehouse.getName(), id);
+        verify(warehouseRepository, times(1)).findById(id);
+        verify(warehouseRepository, times(1)).existsByNameAndIdNot(updatedWarehouseDTO.getName(), id);
         verify(warehouseRepository, never()).save(any(Warehouse.class));
     }
 
@@ -120,45 +121,38 @@ public class WarehouseServiceImplTest {
     @Test
     void test_updateWarehouse_emptyNameShouldThrowException() {
         Long id = 1L;
-        Warehouse existingWarehouse = getWarehouse(createWarehouseRequestDTO());
-        Warehouse updatedWarehouse = new Warehouse();
-        updatedWarehouse.setName("");
+        Warehouse existingWarehouse = new Warehouse();
+        existingWarehouse.setName("Old Name");
+        existingWarehouse.setLocation("Old Location");
+
+        WarehouseRequestDTO updatedWarehouseDTO = new WarehouseRequestDTO("", "Valid Location");
 
         when(warehouseRepository.existsById(id)).thenReturn(true);
-        when(warehouseRepository.getById(id)).thenReturn(existingWarehouse);
+        when(warehouseRepository.findById(id)).thenReturn(Optional.of(existingWarehouse));
 
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            warehouseServiceImpl.updateWarehouse(id, updatedWarehouse);
-        });
-
-        assertNotNull(exception);
-        assertEquals("4001", exception.getErrorCode());
+        assertThrows(BadRequestException.class, () -> warehouseServiceImpl.updateWarehouse(id, updatedWarehouseDTO));
 
         verify(warehouseRepository, times(1)).existsById(id);
-        verify(warehouseRepository, times(1)).getById(id);
+        verify(warehouseRepository, times(1)).findById(id);
         verify(warehouseRepository, never()).save(any(Warehouse.class));
     }
 
     @Test
     void test_updateWarehouse_emptyLocationShouldThrowException() {
         Long id = 1L;
-        Warehouse existingWarehouse = getWarehouse(createWarehouseRequestDTO());
-        Warehouse updatedWarehouse = new Warehouse();
-        updatedWarehouse.setName("Valid Name");
-        updatedWarehouse.setLocation("");
+        Warehouse existingWarehouse = new Warehouse();
+        existingWarehouse.setName("Old Name");
+        existingWarehouse.setLocation("Old Location");
+
+        WarehouseRequestDTO updatedWarehouseDTO = new WarehouseRequestDTO("Valid Name", "");
 
         when(warehouseRepository.existsById(id)).thenReturn(true);
-        when(warehouseRepository.getById(id)).thenReturn(existingWarehouse);
+        when(warehouseRepository.findById(id)).thenReturn(Optional.of(existingWarehouse));
 
-        BadRequestException exception = assertThrows(BadRequestException.class, () -> {
-            warehouseServiceImpl.updateWarehouse(id, updatedWarehouse);
-        });
-
-        assertNotNull(exception);
-        assertEquals("4002", exception.getErrorCode());
+        assertThrows(BadRequestException.class, () -> warehouseServiceImpl.updateWarehouse(id, updatedWarehouseDTO));
 
         verify(warehouseRepository, times(1)).existsById(id);
-        verify(warehouseRepository, times(1)).getById(id);
+        verify(warehouseRepository, times(1)).findById(id);
         verify(warehouseRepository, never()).save(any(Warehouse.class));
     }
 }

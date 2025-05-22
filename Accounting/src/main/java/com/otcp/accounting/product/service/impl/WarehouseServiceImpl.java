@@ -6,6 +6,8 @@ import com.otcp.accounting.common.exception.BadRequestException;
 import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
+import com.otcp.accounting.product.dto.request.WarehouseRequestDTO;
+import com.otcp.accounting.product.dto.response.WarehouseResponseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
 import com.otcp.accounting.product.repository.WarehouseRepository;
 import com.otcp.accounting.product.service.WarehouseService;
@@ -48,7 +50,7 @@ public class WarehouseServiceImpl implements WarehouseService {
 
 
     @Override
-    public Warehouse updateWarehouse(Long id, Warehouse warehouse) {
+    public WarehouseResponseDTO updateWarehouse(Long id, WarehouseRequestDTO warehouseRequestDTO) {
         logger.info("Attempting to update warehouse with ID: {}", id);
 
         if (!warehouseRepository.existsById(id)) {
@@ -58,31 +60,31 @@ public class WarehouseServiceImpl implements WarehouseService {
 
         Warehouse existingWarehouse = warehouseRepository.getById(id);
 
-        if (!StringUtils.hasText(warehouse.getName())) {
+        if (!StringUtils.hasText(warehouseRequestDTO.getName())) {
             logger.error("Warehouse name cannot be empty (Error Code: {})", "4001");
             throw new BadRequestException("4001");
         }
 
-        if (!StringUtils.hasText(warehouse.getLocation())) {
+        if (!StringUtils.hasText(warehouseRequestDTO.getLocation())) {
             logger.error("Warehouse location cannot be empty (Error Code: {})", "4002");
             throw new BadRequestException("4002");
         }
 
-        if (!existingWarehouse.getName().equals(warehouse.getName()) &&
-                warehouseRepository.existsByNameAndIdNot(warehouse.getName(), id)) {
-            logger.error("Warehouse name '{}' is already in use (Error Code: {})", warehouse.getName(), "5001");
+        if (!existingWarehouse.getName().equals(warehouseRequestDTO.getName()) &&
+                warehouseRepository.existsByNameAndIdNot(warehouseRequestDTO.getName(), id)) {
+            logger.error("Warehouse name '{}' is already in use (Error Code: {})", warehouseRequestDTO.getName(), "5001");
             throw new EntityConflictException();
             //TODO: Burada aynı mantıkla, hata kodlarını doğru şekilde yönetmek için EntityConflictException Warehouse icin ozellestirilebilir.
 
         }
 
-        existingWarehouse.setName(warehouse.getName());
-        existingWarehouse.setLocation(warehouse.getLocation());
+        existingWarehouse.setName(warehouseRequestDTO.getName());
+        existingWarehouse.setLocation(warehouseRequestDTO.getLocation());
 
         Warehouse updatedWarehouse = warehouseRepository.save(existingWarehouse);
         logger.info("Successfully updated warehouse with ID: {} ", id);
 
-        return updatedWarehouse;
+        return DtoConverter.convert(updatedWarehouse,WarehouseResponseDTO.class);
     }
 
 
