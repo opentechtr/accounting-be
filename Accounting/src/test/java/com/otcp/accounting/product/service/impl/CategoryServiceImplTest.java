@@ -1,6 +1,6 @@
 package com.otcp.accounting.product.service.impl;
 
-import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
@@ -87,7 +87,7 @@ class CategoryServiceImplTest {
         when(categoryRepository.findById(categoryId)).thenReturn(java.util.Optional.of(existingCategory));
         when(categoryRepository.existsByName(conflictingCategoryName)).thenReturn(true);
 
-        EntityConflictEexception exception = assertThrows(EntityConflictEexception.class, () -> {
+        EntityConflictException exception = assertThrows(EntityConflictException.class, () -> {
             categoryServiceImpl.updateCategory(updateCategoryDTO);
         });
 
