@@ -5,7 +5,6 @@ import com.otcp.accounting.common.dto.DtoConverter;
 import com.otcp.accounting.common.exception.BadRequestException;
 import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
-import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
 import com.otcp.accounting.product.dto.request.WarehouseRequestDTO;
 import com.otcp.accounting.product.dto.response.WarehouseResponseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
@@ -27,7 +26,7 @@ public class WarehouseServiceImpl implements WarehouseService {
     private final WarehouseRepository warehouseRepository;
 
     @Override
-    public Warehouse saveWarehouse(CreateWarehouseDTO warehouseDTO) {
+    public WarehouseResponseDTO saveWarehouse(WarehouseRequestDTO warehouseDTO) {
 
         if (warehouseRepository.existsByName(warehouseDTO.getName()))
             throw new EntityConflictException();
@@ -35,7 +34,8 @@ public class WarehouseServiceImpl implements WarehouseService {
         Warehouse warehouse = DtoConverter.convert(warehouseDTO, Warehouse.class);
         warehouse.setEntityStatus(EntityStatus.ACTIVE);
 
-        return warehouseRepository.save(warehouse);
+         warehouseRepository.save(warehouse);
+         return DtoConverter.convert(warehouse, WarehouseResponseDTO.class);
     }
 
     @Override
