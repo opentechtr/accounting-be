@@ -1,6 +1,6 @@
 package com.otcp.accounting.product.service.impl;
 
-import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
@@ -17,6 +17,7 @@ import org.mockito.quality.Strictness;
 import java.util.Optional;
 
 import static com.otcp.accounting.product.service.impl.CategoryTestProvider.createCategoryRequestDTO;
+
 import static com.otcp.accounting.product.service.impl.CategoryTestProvider.getCategory;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -65,7 +66,9 @@ class CategoryServiceImplTest {
 
         Mockito.when(categoryRepository.findByName("test category")).thenReturn(Optional.of(new Category()));
 
-        assertThrows(EntityConflictEexception.class, () -> categoryServiceImpl.saveCategory(categoryDTO));
+        assertThrows(EntityConflictException.class, () -> categoryServiceImpl.saveCategory(categoryDTO));
 
     }
+
+
 }

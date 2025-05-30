@@ -1,6 +1,6 @@
 package com.otcp.accounting.product.service.impl;
 
-import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
@@ -64,7 +64,7 @@ class ProductServiceTest {
         Mockito.when(categoryRepository.findById(1L)).thenReturn(Optional.of(new Category())); // DİKKAT: aynı ID
 
 
-        assertThrows(EntityConflictEexception.class, () -> productService.saveProduct(productDTO));
+        assertThrows(EntityConflictException.class, () -> productService.saveProduct(productDTO));
     }
 
     @Test

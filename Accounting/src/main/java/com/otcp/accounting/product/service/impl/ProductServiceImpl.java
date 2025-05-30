@@ -3,7 +3,7 @@ package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.dto.DtoConverter;
-import com.otcp.accounting.common.exception.EntityConflictEexception;
+import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
@@ -31,7 +31,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponseDTO saveProduct(ProductRequestDTO productRequestDTO)  {
 
         if (productRepository.findByCode(productRequestDTO.getCode()).isPresent()) {
-            throw new EntityConflictEexception();
+            throw new EntityConflictException();
         }
         Category category = categoryRepository.findById(productRequestDTO.getCategoryId())
                 .orElseThrow(EntityNotFoundException::new);
