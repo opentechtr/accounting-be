@@ -1,6 +1,7 @@
 package com.otcp.accounting.product.service.impl;
 
 import com.otcp.accounting.common.exception.EntityConflictException;
+import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
 import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
@@ -10,9 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import java.util.Optional;
+
+import static com.otcp.accounting.product.service.impl.CategoryTestProvider.createCategoryRequestDTO;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +49,33 @@ class CategoryServiceImplTest {
         assertNotNull(actualResult);
         assertEquals(expectedCategory.getName(), actualResult.getName());
     }
+
+    @Test
+    void createCategory_successful() {
+        CreateCategoryDTO categoryDTO = createCategoryRequestDTO();
+        Category expectedCategory = getCategory(categoryDTO);
+
+        Mockito.when(categoryRepository.findByName("test category")).thenReturn(Optional.empty());
+        Mockito.when(categoryRepository.save(Mockito.any(Category.class))).thenReturn(expectedCategory);
+
+        CategoryResponseDTO actualResult = categoryServiceImpl.saveCategory(categoryDTO);
+        assertNotNull(expectedCategory.getName(),actualResult.getName());
+
+    }
+
+    @Test
+    void createCategory_ShouldThrowDuplicateException_WhenCategoryNameExists() {
+        CreateCategoryDTO categoryDTO = new CreateCategoryDTO();
+        categoryDTO.setName("test category");
+        categoryDTO.setDescription("test description");
+
+        Mockito.when(categoryRepository.findByName("test category")).thenReturn(Optional.of(new Category()));
+
+        assertThrows(EntityConflictException.class, () -> categoryServiceImpl.saveCategory(categoryDTO));
+
+    }
+
+
 
     @Test
     void test_updateCategory_successful() {

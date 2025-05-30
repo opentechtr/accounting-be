@@ -1,7 +1,7 @@
 package com.otcp.accounting.product.service.impl;
 
-import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.exception.EntityConflictException;
+import com.otcp.accounting.common.base.EntityStatus;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
 import com.otcp.accounting.product.dto.request.ProductUpdateDTO;

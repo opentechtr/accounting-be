@@ -25,10 +25,16 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     @Override
     @Transactional
-    public Category saveCategory(CreateCategoryDTO categoryDTO) {
+    public CategoryResponseDTO saveCategory(CreateCategoryDTO categoryDTO) {
         Category category = DtoConverter.convert(categoryDTO, Category.class);
         category.setEntityStatus(EntityStatus.ACTIVE);
-        return categoryRepository.save(category);
+
+       if (this.categoryRepository.findByName(category.getName()).isPresent()){
+           throw new EntityConflictException();
+       }
+
+       this.categoryRepository.save(category);
+        return DtoConverter.convert(category,CategoryResponseDTO.class);
     }
 
     @Override
