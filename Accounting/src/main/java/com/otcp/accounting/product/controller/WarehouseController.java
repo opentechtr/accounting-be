@@ -1,7 +1,6 @@
 package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
-import com.otcp.accounting.product.dto.request.CreateWarehouseDTO;
 import com.otcp.accounting.product.dto.request.WarehouseRequestDTO;
 import com.otcp.accounting.product.dto.response.WarehouseResponseDTO;
 import com.otcp.accounting.product.entity.Warehouse;
@@ -24,7 +23,7 @@ public class WarehouseController {
     }
 
     @PostMapping
-    public ApiResponse<Warehouse> createWarehouse(@Valid @RequestBody CreateWarehouseDTO warehouseDTO) {
+    public ApiResponse<WarehouseResponseDTO> createWarehouse(@Valid @RequestBody WarehouseRequestDTO warehouseDTO) {
         return ApiResponse.success(warehouseService.saveWarehouse(warehouseDTO));
     }
 
