@@ -1,11 +1,13 @@
 package com.otcp.accounting.product.controller;
 
+import com.otcp.accounting.common.dto.FilterDTO;
 import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.request.UpdateStockDTO;
 import com.otcp.accounting.product.dto.response.StockResponseDTO;
 import com.otcp.accounting.product.entity.Stock;
 import com.otcp.accounting.product.service.StockService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class StockController {
         this.stockService = stockService;
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<Stock> createStock(@RequestBody Stock stock) {
         return new ResponseEntity<>(stockService.saveStock(stock), HttpStatus.CREATED);
     }
@@ -33,9 +35,15 @@ public class StockController {
         return ResponseEntity.ok(stockService.getStockById(id));
     }
 
-    @GetMapping
-    public ResponseEntity<List<Stock>> getAllStocks() {
-        return ResponseEntity.ok(stockService.getAllStocks());
+    @PostMapping
+    public ApiResponse<Page<Stock>> getAllStocks(@Valid @RequestBody FilterDTO filterDTO) {
+        Page<Stock> stocks = stockService.getAllStocks(filterDTO);
+
+        if (stocks.getTotalElements() == 0) {
+            return ApiResponse.noContent();
+        }
+
+        return ApiResponse.success(stockService.getAllStocks(filterDTO));
     }
 
     @PutMapping
