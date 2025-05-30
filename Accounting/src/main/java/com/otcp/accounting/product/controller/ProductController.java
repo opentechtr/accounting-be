@@ -3,6 +3,7 @@ package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.request.ProductUpdateDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Product;
 import com.otcp.accounting.product.service.ProductService;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
@@ -40,19 +41,19 @@ public class ProductController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Product>> getProductsByCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
+    public ApiResponse<List<ProductResponseDTO>> getProductsByCategory(@PathVariable Long categoryId) {
+        return ApiResponse.success(productService.getProductsByCategory(categoryId));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        return ResponseEntity.ok(productService.updateProduct(id, product));
+    @PutMapping
+    public ApiResponse<ProductResponseDTO> updateProduct(@Valid @RequestBody ProductUpdateDTO productUpdateDTO) {
+        return ApiResponse.success(productService.updateProduct(productUpdateDTO));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ApiResponse<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.noContent().build();
+        return ApiResponse.noContent();
     }
 
     @GetMapping("/search")

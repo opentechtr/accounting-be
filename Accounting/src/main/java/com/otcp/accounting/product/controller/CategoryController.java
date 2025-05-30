@@ -2,6 +2,7 @@ package com.otcp.accounting.product.controller;
 
 import com.otcp.accounting.common.response.ApiResponse;
 import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.service.CategoryService;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -41,9 +42,9 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.updateCategory(id, category));
+    @PutMapping
+    public ApiResponse<Category> updateCategory(@Valid @RequestBody UpdateCategoryDTO updateCategoryDTO) {
+        return ApiResponse.success(categoryService.updateCategory(updateCategoryDTO));
     }
 
     @DeleteMapping("/{id}")
@@ -54,7 +55,7 @@ public class CategoryController {
 
 
     @GetMapping("/search")
-    public ResponseEntity<List<Category>> searchCategoriesByName(@RequestParam String name) {
-        return ResponseEntity.ok(categoryService.searchCategoriesByName(name));
+    public ApiResponse<List<CategoryResponseDTO>> searchCategoriesByName(@RequestParam String categoryName) {
+        return ApiResponse.success(categoryService.searchCategoriesByName(categoryName));
     }
 }

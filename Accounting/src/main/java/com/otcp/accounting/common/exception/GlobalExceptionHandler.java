@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex, Locale locale) {
         Map<String, Object> errors = new HashMap<>();
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            errors.put(error.getField(), messageSource.getMessage(error.getDefaultMessage(), null, locale));
+            errors.put(error.getField(), messageSource.getMessage(error.getCode(), null, locale));
         }
         return createErrorResponse(
                 getLocalizedMessage("VALIDATION_ERROR", null, locale),

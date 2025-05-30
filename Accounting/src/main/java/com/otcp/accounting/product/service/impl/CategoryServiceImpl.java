@@ -5,6 +5,7 @@ import com.otcp.accounting.common.dto.DtoConverter;
 import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 import com.otcp.accounting.product.dto.request.CreateCategoryDTO;
+import com.otcp.accounting.product.dto.request.UpdateCategoryDTO;
 import com.otcp.accounting.product.dto.response.CategoryResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.repository.CategoryRepository;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +49,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category updateCategory(Long id, Category category) {
-        return null;
+    public Category updateCategory(UpdateCategoryDTO updateCategoryDTO) {
+        Category category = getCategory(updateCategoryDTO.getId());
+
+        Optional.ofNullable(updateCategoryDTO.getName())
+                .ifPresent(name -> {
+                    if (categoryRepository.existsByName(name)) {
+                        throw new EntityConflictException();
+                    }
+                    category.setName(name);
+                });
+
+        category.setDescription(updateCategoryDTO.getDescription());
+
+        return categoryRepository.save(category);
     }
 
     @Override
@@ -60,9 +74,17 @@ public class CategoryServiceImpl implements CategoryService {
         categoryRepository.save(category);
     }
 
+    @Override
+    public List<CategoryResponseDTO> searchCategoriesByName(String categoryName) {
+        List<Category> categoryList = categoryRepository.findAllByNameContainingIgnoreCase(categoryName);
+        if (categoryList.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+        return DtoConverter.convertList(categoryList, CategoryResponseDTO.class);
+    }
 
     @Override
-    public List<Category> searchCategoriesByName(String name) {
-        return null;
+    public Category getCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(EntityNotFoundException::new);
     }
 }

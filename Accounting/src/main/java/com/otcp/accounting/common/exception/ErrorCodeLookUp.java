@@ -11,6 +11,9 @@ public class ErrorCodeLookUp {
 
     static {
         errorCodes = new HashMap<>();
+        errorCodes.put("4001","BAD_REQUEST_WAREHOUSE_EMPTY_NAME_EXCEPTION");
+        errorCodes.put("4002","BAD_REQUEST_WAREHOUSE_EMPTY_LOCATION_EXCEPTION");
+        errorCodes.put("4091", "CONFLICT_WAREHOUSE_DUPLICATE_NAME_EXCEPTION");
         errorCodes.put("5000", "ENTITY_NOT_FOUND_EXCEPTION");
         errorCodes.put("5001", "ENTITY_CONFLICT_EXCEPTION");
     }

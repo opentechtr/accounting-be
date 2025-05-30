@@ -7,15 +7,17 @@ import com.otcp.accounting.common.exception.EntityConflictException;
 import com.otcp.accounting.common.exception.EntityNotFoundException;
 
 import com.otcp.accounting.product.dto.request.ProductRequestDTO;
+import com.otcp.accounting.product.dto.request.ProductUpdateDTO;
 import com.otcp.accounting.product.dto.response.ProductResponseDTO;
 import com.otcp.accounting.product.entity.Category;
 import com.otcp.accounting.product.entity.Product;
-import com.otcp.accounting.product.repository.CategoryRepository;
 import com.otcp.accounting.product.repository.ProductRepository;
+import com.otcp.accounting.product.service.CategoryService;
 import com.otcp.accounting.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -24,8 +26,8 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
 
+    private final CategoryService categoryService;
 
     @Override
     public ProductResponseDTO saveProduct(ProductRequestDTO productRequestDTO)  {
@@ -33,9 +35,7 @@ public class ProductServiceImpl implements ProductService {
         if (productRepository.findByCode(productRequestDTO.getCode()).isPresent()) {
             throw new EntityConflictException();
         }
-        Category category = categoryRepository.findById(productRequestDTO.getCategoryId())
-                .orElseThrow(EntityNotFoundException::new);
-
+        Category category = categoryService.getCategory(productRequestDTO.getCategoryId());
 
         Product product ;
         product = DtoConverter.convert(productRequestDTO,Product.class);
@@ -59,23 +59,66 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> getProductsByCategory(Long categoryId) {
-        return null;
+    public List<ProductResponseDTO> getProductsByCategory(Long categoryId) {
+        List<Product> productList = productRepository.findAllByCategory_Id(categoryId);
+        if (productList.isEmpty()) {
+            throw new EntityNotFoundException();
+        }
+
+        return DtoConverter.convertList(productList,ProductResponseDTO.class);
     }
 
     @Override
-    public Product updateProduct(Long id, Product product) {
-        return null;
+    public ProductResponseDTO updateProduct(ProductUpdateDTO productUpdateDTO) {
+        Product product = getProductById(productUpdateDTO.getId());
+        boolean isCodeChanged = !product.getCode().equals(productUpdateDTO.getCode());
+
+        if (isCodeChanged) {
+            productRepository.findByCode(productUpdateDTO.getCode())
+                    .filter(p -> !p.getId().equals(productUpdateDTO.getId()))
+                    .ifPresent(p -> {
+                        throw new EntityConflictException();
+                    });
+            product.setCode(productUpdateDTO.getCode());
+        }
+
+        if (StringUtils.hasText(productUpdateDTO.getDescription())) {
+            product.setDescription(productUpdateDTO.getDescription());
+        }
+
+        product.setName(productUpdateDTO.getName());
+        product.setPrice(productUpdateDTO.getPrice());
+        product.setCategory(categoryService.getCategory(productUpdateDTO.getCategoryId()));
+
+        productRepository.save(product);
+
+        return DtoConverter.convert(product, ProductResponseDTO.class);
+    }
+
+    @Override
+    public Product getProductById(Long id) {
+        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override
     public void deleteProduct(Long id) {
+        Product product = getProduct(id);
 
+        if (product.getEntityStatus() == EntityStatus.DELETED) {
+            throw new EntityNotFoundException();
+        }
+
+        product.delete();
+        productRepository.save(product);
     }
 
     @Override
     public List<Product> searchProductsByName(String name) {
         return null;
+    }
+
+    private Product getProduct(Long id) {
+        return productRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
 }
