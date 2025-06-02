@@ -34,4 +34,12 @@ public class ApiResponse<T> {
                 .httpStatus(HttpStatus.NO_CONTENT.value())
                 .build();
     }
+
+    public static <T> ApiResponse<T> created(T data) {
+        return ApiResponse.<T>builder()
+                .data(data)
+                .status(ApiResponseStatus.SUCCESS)
+                .httpStatus(HttpStatus.CREATED.value())
+                .build();
+    }
 }
